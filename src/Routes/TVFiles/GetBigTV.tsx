@@ -1,6 +1,6 @@
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { AnimatePresence, motion, useViewportScroll } from "framer-motion";
+import { AnimatePresence, useViewportScroll } from "framer-motion";
 import { useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import {
@@ -22,6 +22,8 @@ import {
   ExitButton,
   Overlay,
 } from "../styledComponents";
+import { useRecoilState } from "recoil";
+import { likeTVAtom } from "../../Atoms";
 
 const GetBigTV = () => {
   const history = useHistory();
@@ -30,6 +32,7 @@ const GetBigTV = () => {
     clickedSession: string;
   }>("/tvs/:tvId/:clickedSession");
   const { scrollY } = useViewportScroll();
+  const [atom, setAtom] = useRecoilState(likeTVAtom);
 
   const { data: TopLatedTVData } = useQuery<IGetTVResult>(
     ["TVs", "TopLated"],
@@ -55,6 +58,9 @@ const GetBigTV = () => {
     AiringTodayTVData?.results.find(
       (tv) => tv.id === +bigMovieMatch.params.tvId
     );
+  const matchingLiked =
+    bigMovieMatch?.params.tvId &&
+    atom.find((tv) => tv.id === +bigMovieMatch.params.tvId);
 
   let clickedMovie;
   if (
@@ -74,6 +80,12 @@ const GetBigTV = () => {
     bigMovieMatch.params.clickedSession === "AiringToday"
   ) {
     clickedMovie = matchingAiringToday;
+  }
+  if (
+    matchingLiked !== undefined &&
+    bigMovieMatch.params.clickedSession === "Liked"
+  ) {
+    clickedMovie = matchingLiked;
   }
 
   return (

@@ -32,6 +32,8 @@ import {
   Slider,
   SummaryBox,
 } from "../styledComponents";
+import { useRecoilState } from "recoil";
+import { likeTVAtom } from "../../Atoms";
 
 const rowVariants = {
   hidden: (isBack: boolean) => ({
@@ -75,6 +77,7 @@ const AiringTodayTV = () => {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [isback, setIsBack] = useState(false);
+  const [atom, setAtom] = useRecoilState(likeTVAtom);
   const history = useHistory();
 
   const { data } = useQuery<IGetTVResult>(
@@ -105,6 +108,31 @@ const AiringTodayTV = () => {
   };
   const onBoxClicked = (tvId: number) => {
     history.push(`/tvs/${tvId}/AiringToday`);
+  };
+  const onLikeClicked = (
+    movieId: number,
+    movieBackdrop_path: string,
+    moviePoster_path: string,
+    movieTitle: string,
+    movieOverview: string,
+    movieVote_average: number,
+    movieGenre_ids: number[]
+  ) => {
+    const isDuplicate = atom.find((value) => value.id === movieId);
+    if (isDuplicate) return;
+
+    setAtom((prev) => [
+      ...prev,
+      {
+        id: movieId,
+        backdrop_path: movieBackdrop_path,
+        poster_path: moviePoster_path,
+        name: movieTitle,
+        overview: movieOverview,
+        genre_ids: movieGenre_ids,
+        vote_average: movieVote_average,
+      },
+    ]);
   };
   const prevClicked = () => {
     setIsBack(true);
@@ -139,7 +167,7 @@ const AiringTodayTV = () => {
   });
 
   return (
-    <FullLine style={{ marginBottom: "0px" }}>
+    <FullLine>
       <Slider>
         <PrevPage onClick={prevClicked}>
           <FontAwesomeIcon icon={faAngleLeft} />
@@ -187,7 +215,19 @@ const AiringTodayTV = () => {
                             <FontAwesomeIcon icon={faPlus} />
                           </Button>
                         </Link>
-                        <Button>
+                        <Button
+                          onClick={() =>
+                            onLikeClicked(
+                              tv.id,
+                              tv.backdrop_path,
+                              tv.poster_path,
+                              tv.name,
+                              tv.overview,
+                              tv.vote_average,
+                              tv.genre_ids
+                            )
+                          }
+                        >
                           <FontAwesomeIcon icon={faThumbsUp} />
                         </Button>
                       </div>

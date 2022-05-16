@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useHistory } from "react-router-dom";
 import { makeImagePath } from "../utils";
-import { getOnTheAirTV, getTVGenres, IGenres, IGetTVResult } from "../api";
+import { getMovieGenres, IGenres } from "../api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
@@ -11,9 +11,9 @@ import {
   faPlay,
   faPlus,
   faAngleDown,
-  faThumbsUp,
+  faThumbsDown,
 } from "@fortawesome/free-solid-svg-icons";
-import GetTVData from "./GetTVData";
+import GetMovieData from "./GetMovieData";
 import {
   Block,
   Box,
@@ -33,7 +33,7 @@ import {
   SummaryBox,
 } from "../styledComponents";
 import { useRecoilState } from "recoil";
-import { likeTVAtom } from "../../Atoms";
+import { likeMovieAtom } from "../../Atoms";
 
 const rowVariants = {
   hidden: (isBack: boolean) => ({
@@ -73,63 +73,48 @@ const infoVariants = {
   },
 };
 
-const OnTheAirTV = () => {
+const LikedMovie = () => {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [isback, setIsBack] = useState(false);
-  const [atom, setAtom] = useRecoilState(likeTVAtom);
+  const [atom, setAtom] = useRecoilState(likeMovieAtom);
   const history = useHistory();
 
-  const { data } = useQuery<IGetTVResult>(["TVs", "OnTheAir"], getOnTheAirTV);
-
-  const { data: genresData } = useQuery<IGenres>(["TV", "Genres"], getTVGenres);
+  const { data: genresData } = useQuery<IGenres>(
+    ["Movie", "Genres"],
+    getMovieGenres
+  );
 
   const increaseIndex = () => {
-    if (data) {
+    if (atom) {
       if (leaving) return;
       setLeaving(true);
-      const totalMovies = data.results.length;
+      const totalMovies = atom.length;
       const maxIndex = Math.floor(totalMovies / offset);
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
   const decreaseIndex = () => {
-    if (data) {
+    if (atom) {
       if (leaving) return;
       setLeaving(true);
-      const totalMovies = data.results.length;
+      const totalMovies = atom.length;
       const maxIndex = Math.floor(totalMovies / offset);
       setIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
       setIsBack(false);
     }
   };
-  const onBoxClicked = (tvId: number) => {
-    history.push(`/tvs/${tvId}/OnTheAir`);
+  const onBoxClicked = (movieId: number) => {
+    history.push(`/movies/${movieId}/Liked`);
   };
-  const onLikeClicked = (
-    movieId: number,
-    movieBackdrop_path: string,
-    moviePoster_path: string,
-    movieTitle: string,
-    movieOverview: string,
-    movieVote_average: number,
-    movieGenre_ids: number[]
-  ) => {
-    const isDuplicate = atom.find((value) => value.id === movieId);
-    if (isDuplicate) return;
-
-    setAtom((prev) => [
-      ...prev,
-      {
-        id: movieId,
-        backdrop_path: movieBackdrop_path,
-        poster_path: moviePoster_path,
-        name: movieTitle,
-        overview: movieOverview,
-        genre_ids: movieGenre_ids,
-        vote_average: movieVote_average,
-      },
-    ]);
+  const onUnLikeClicked = (movieId: number) => {
+    setAtom((oldAtom) => {
+      const clickedAtomIndex = atom.findIndex((value) => value.id === movieId);
+      return [
+        ...oldAtom.slice(0, clickedAtomIndex),
+        ...oldAtom.slice(clickedAtomIndex + 1),
+      ];
+    });
   };
   const prevClicked = () => {
     setIsBack(true);
@@ -164,7 +149,7 @@ const OnTheAirTV = () => {
   });
 
   return (
-    <FullLine>
+    <FullLine style={{ marginBottom: "0px" }}>
       <Slider>
         <PrevPage onClick={prevClicked}>
           <FontAwesomeIcon icon={faAngleLeft} />
@@ -173,8 +158,8 @@ const OnTheAirTV = () => {
           initial={false}
           onExitComplete={() => setLeaving(false)}
         >
-          <Block key={"OnTheAirTV"}></Block>
-          <RowTitle>On The Air</RowTitle>
+          <Block key={"LikedMovies"}></Block>
+          <RowTitle>My Movies</RowTitle>
           <Row
             custom={isback}
             variants={rowVariants}
@@ -185,19 +170,19 @@ const OnTheAirTV = () => {
             key={offset * 100 + index}
             nofbox={offset}
           >
-            {data?.results
+            {atom
               .slice(offset * index, offset * index + offset)
-              .map((tv) => (
+              .map((movie) => (
                 <SummaryBox
-                  key={tv.id}
+                  key={movie.id}
                   variants={summaryBoxVariants}
                   whileHover="hover"
                   transition={{ type: "tween" }}
                 >
                   <Box
-                    bgphoto={makeImagePath(tv.backdrop_path, "w500")}
+                    bgphoto={makeImagePath(movie.backdrop_path, "w500")}
                     transition={{ type: "tween" }}
-                    layoutId={tv.id + "OnTheAir"}
+                    layoutId={movie.id + "Liked"}
                   >
                     <Img src={require("../../images/NetflixIcon.png")} />
                   </Box>
@@ -207,39 +192,27 @@ const OnTheAirTV = () => {
                         <PlayButton>
                           <FontAwesomeIcon icon={faPlay} />
                         </PlayButton>
-                        <Link to={`/detail/tv/${tv.id}`}>
+                        <Link to={`/detail/movie/${movie.id}`}>
                           <Button>
                             <FontAwesomeIcon icon={faPlus} />
                           </Button>
                         </Link>
-                        <Button
-                          onClick={() =>
-                            onLikeClicked(
-                              tv.id,
-                              tv.backdrop_path,
-                              tv.poster_path,
-                              tv.name,
-                              tv.overview,
-                              tv.vote_average,
-                              tv.genre_ids
-                            )
-                          }
-                        >
-                          <FontAwesomeIcon icon={faThumbsUp} />
+                        <Button onClick={() => onUnLikeClicked(movie.id)}>
+                          <FontAwesomeIcon icon={faThumbsDown} />
                         </Button>
                       </div>
                       <div>
-                        <Button onClick={() => onBoxClicked(tv.id)}>
+                        <Button onClick={() => onBoxClicked(movie.id)}>
                           <FontAwesomeIcon icon={faAngleDown} />
                         </Button>
                       </div>
                     </Buttons>
                     <RunningTime>
-                      <span>{tv.name}</span>
-                      <GetTVData tvId={tv.id} />
+                      <span>{movie.title}</span>
+                      <GetMovieData movieId={movie.id} />
                     </RunningTime>
                     <Categories>
-                      {tv.genre_ids.slice(0, 3).map((genreId) => {
+                      {movie.genre_ids.slice(0, 3).map((genreId) => {
                         const genreString = genresData?.genres.find(
                           (value) => value.id === genreId
                         );
@@ -261,4 +234,4 @@ const OnTheAirTV = () => {
   );
 };
 
-export default OnTheAirTV;
+export default LikedMovie;

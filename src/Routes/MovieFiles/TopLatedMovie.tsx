@@ -37,6 +37,8 @@ import {
   Slider,
   SummaryBox,
 } from "../styledComponents";
+import { useRecoilState } from "recoil";
+import { likeMovieAtom } from "../../Atoms";
 
 const rowVariants = {
   hidden: (isBack: boolean) => ({
@@ -80,6 +82,7 @@ const TopLatedMovie = () => {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [isback, setIsBack] = useState(false);
+  const [atom, setAtom] = useRecoilState(likeMovieAtom);
   const history = useHistory();
 
   const { data } = useQuery<IGetMoviesResult>(
@@ -113,6 +116,31 @@ const TopLatedMovie = () => {
   };
   const onBoxClicked = (movieId: number) => {
     history.push(`/movies/${movieId}/TopLated`);
+  };
+  const onLikeClicked = (
+    movieId: number,
+    movieBackdrop_path: string,
+    moviePoster_path: string,
+    movieTitle: string,
+    movieOverview: string,
+    movieVote_average: number,
+    movieGenre_ids: number[]
+  ) => {
+    const isDuplicate = atom.find((value) => value.id === movieId);
+    if (isDuplicate) return;
+
+    setAtom((prev) => [
+      ...prev,
+      {
+        id: movieId,
+        backdrop_path: movieBackdrop_path,
+        poster_path: moviePoster_path,
+        title: movieTitle,
+        overview: movieOverview,
+        genre_ids: movieGenre_ids,
+        vote_average: movieVote_average,
+      },
+    ]);
   };
   const prevClicked = () => {
     setIsBack(true);
@@ -195,7 +223,19 @@ const TopLatedMovie = () => {
                             <FontAwesomeIcon icon={faPlus} />
                           </Button>
                         </Link>
-                        <Button>
+                        <Button
+                          onClick={() =>
+                            onLikeClicked(
+                              movie.id,
+                              movie.backdrop_path,
+                              movie.poster_path,
+                              movie.title,
+                              movie.overview,
+                              movie.vote_average,
+                              movie.genre_ids
+                            )
+                          }
+                        >
                           <FontAwesomeIcon icon={faThumbsUp} />
                         </Button>
                       </div>

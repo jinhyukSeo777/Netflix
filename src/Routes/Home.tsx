@@ -17,6 +17,9 @@ import GetBigMovie from "./MovieFiles/GetBigMovie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import LikedMovie from "./MovieFiles/LikedMovie";
+import { likeMovieAtom } from "../Atoms";
+import { useRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   position: relative;
@@ -138,12 +141,13 @@ const Home = () => {
     useQuery<IGetMoviesResult>(["Movies", "TopLated"], getTopLatedMovie);
   const { data: UpcomingMovieData, isLoading: isLoading3 } =
     useQuery<IGetMoviesResult>(["Movies", "UpComing"], getUpcomingMovie);
-  const { data: LatestMovieData, isLoading: isLoading4 } =
-    useQuery<IGetLatestResult>(["Movies", "Latest"], getLatestMovie);
+  const [atom, setAtom] = useRecoilState(likeMovieAtom);
+  // const { data: LatestMovieData, isLoading: isLoading4 } =
+  //   useQuery<IGetLatestResult>(["Movies", "Latest"], getLatestMovie);
 
   return (
     <Wrapper>
-      {isLoading || isLoading2 || isLoading3 || isLoading4 ? (
+      {isLoading || isLoading2 || isLoading3 ? (
         <Loader>
           <Ring></Ring>
           <span>Loading...</span>
@@ -177,6 +181,7 @@ const Home = () => {
             <TopLatedMovie />
             <NowPlayingMovie />
             <UpComingMovie />
+            {atom.length !== 0 ? <LikedMovie /> : null}
           </div>
           <GetBigMovie />
           <Footer />

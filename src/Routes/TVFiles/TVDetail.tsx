@@ -2,15 +2,10 @@ import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import {
-  GetMovieCredits,
-  GetMovieDetail,
-  GetMovieTrailer,
-  GetSimilarMovie,
   GetSimilarTV,
   GetTVCredits,
   GetTVDetail,
   GetTVTrailer,
-  IGetMoviesResult,
   IGetTVResult,
   ITrailers,
 } from "../api";
@@ -80,7 +75,9 @@ const Container = styled.div<{ bgphoto: string }>`
   display: flex;
   width: 100%;
   height: 100vh;
-  padding: 0 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
 `;
 
@@ -91,13 +88,11 @@ const Poster = styled.div<{ bgphoto: string }>`
   overflow: hidden;
   height: 560px;
   width: 420px;
-  margin-top: 130px;
   border-radius: 3px;
   margin-right: 40px;
 `;
 
 const InfoContainer = styled.div`
-  margin-top: 130px;
   height: 560px;
   width: 900px;
 `;
@@ -200,7 +195,6 @@ const TrailerBox = styled.div`
 
 const SimilarMovieWord = styled.span`
   font-size: 20px;
-  margin-left: 70px;
   margin-top: 15px;
   display: block;
   color: ${(props) => props.theme.white.darker};
@@ -209,7 +203,6 @@ const SimilarMovieWord = styled.span`
 const SimilarMovieBoxs = styled.div`
   display: flex;
   align-items: flex-start;
-  margin-left: 70px;
   background-color: ${(props) => props.theme.black.veryDark};
 `;
 
@@ -274,11 +267,10 @@ const TVDetail = () => {
     ["Actors", tvId],
     () => GetTVCredits(tvId as any)
   );
-  const { data: trailers, isLoading: isLoading3 } = useQuery<ITrailers>(
-    ["Trailers", tvId],
-    () => GetTVTrailer(tvId as any)
+  const { data: trailers } = useQuery<ITrailers>(["Trailers", tvId], () =>
+    GetTVTrailer(tvId as any)
   );
-  const { data: similarTVs, isLoading: isLoading4 } = useQuery<IGetTVResult>(
+  const { data: similarTVs } = useQuery<IGetTVResult>(
     ["SimilarTVs", tvId],
     () => GetSimilarTV(tvId as any)
   );
@@ -315,7 +307,7 @@ const TVDetail = () => {
                   <span style={{ fontSize: "17px" }}>Cast</span>
                   <Scrollbars
                     thumbSize={80}
-                    style={{ width: 900, height: 140 }}
+                    style={{ width: 900, height: 140, marginBottom: "10px" }}
                   >
                     <ActorBoxs>
                       {credits?.cast.slice(0, 20).map((credit) => {
@@ -346,6 +338,7 @@ const TVDetail = () => {
                       return (
                         <TrailerBox key={value.key}>
                           <iframe
+                            title={value.key}
                             width="300"
                             height="160"
                             src={`https://www.youtube.com/embed/${value.key}`}
@@ -360,35 +353,37 @@ const TVDetail = () => {
             </InfoContainer>
           </Container>
 
-          <SimilarMovieWord>Similar TV Shows</SimilarMovieWord>
-          <Scrollbars
-            thumbSize={80}
-            style={{
-              width: "100%",
-              height: "210px",
-              margin: "10px 0 30px 0",
-              backgroundColor: "#141414",
-            }}
-          >
-            <SimilarMovieBoxs>
-              {similarTVs?.results.map((similarTV) => {
-                return (
-                  <SimilarMovieBox key={similarTV.id}>
-                    <Link
-                      to={`/detail/tv/${similarTV.id}`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <SimilarMovieImg
-                        bgphoto={makeImagePath(similarTV.poster_path, "w500")}
+          <div style={{ padding: "0 70px" }}>
+            <SimilarMovieWord>Similar TV Shows</SimilarMovieWord>
+            <Scrollbars
+              thumbSize={80}
+              style={{
+                width: "100%",
+                height: "228px",
+                margin: "10px 0 30px 0",
+                backgroundColor: "#141414",
+              }}
+            >
+              <SimilarMovieBoxs>
+                {similarTVs?.results.map((similarTV) => {
+                  return (
+                    <SimilarMovieBox key={similarTV.id}>
+                      <Link
+                        to={`/detail/tv/${similarTV.id}`}
+                        style={{ textDecoration: "none" }}
                       >
-                        <div>⭐ {similarTV.vote_average.toFixed(1)}/10</div>
-                      </SimilarMovieImg>
-                    </Link>
-                  </SimilarMovieBox>
-                );
-              })}
-            </SimilarMovieBoxs>
-          </Scrollbars>
+                        <SimilarMovieImg
+                          bgphoto={makeImagePath(similarTV.poster_path, "w500")}
+                        >
+                          <div>⭐ {similarTV.vote_average.toFixed(1)}/10</div>
+                        </SimilarMovieImg>
+                      </Link>
+                    </SimilarMovieBox>
+                  );
+                })}
+              </SimilarMovieBoxs>
+            </Scrollbars>
+          </div>
           <Footer />
         </>
       )}

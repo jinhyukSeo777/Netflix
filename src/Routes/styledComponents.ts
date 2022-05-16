@@ -106,11 +106,11 @@ export const SummaryBox = styled(motion.div)`
       border-bottom-right-radius: 0px;
     }
   }
-  &:first-child {
-    transform-origin: center left;
-  }
   &:last-child {
     transform-origin: center right;
+  }
+  &:first-child {
+    transform-origin: center left;
   }
 `;
 
@@ -139,6 +139,7 @@ export const Button = styled.div`
   cursor: pointer;
   &:hover {
     border-color: white;
+    transform: scale(1.15);
   }
 `;
 
@@ -148,6 +149,7 @@ export const PlayButton = styled(Button)`
   border: none;
   &:hover {
     background-color: #f0efef;
+    transform: scale(1.15);
   }
 `;
 

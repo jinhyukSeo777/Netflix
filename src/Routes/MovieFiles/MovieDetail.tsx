@@ -75,7 +75,9 @@ const Container = styled.div<{ bgphoto: string }>`
   display: flex;
   width: 100%;
   height: 100vh;
-  padding: 0 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
 `;
 
@@ -86,13 +88,11 @@ const Poster = styled.div<{ bgphoto: string }>`
   overflow: hidden;
   height: 560px;
   width: 420px;
-  margin-top: 130px;
   border-radius: 3px;
   margin-right: 40px;
 `;
 
 const InfoContainer = styled.div`
-  margin-top: 130px;
   height: 560px;
   width: 900px;
 `;
@@ -195,7 +195,6 @@ const TrailerBox = styled.div`
 
 const SimilarMovieWord = styled.span`
   font-size: 20px;
-  margin-left: 70px;
   margin-top: 15px;
   display: block;
   color: ${(props) => props.theme.white.darker};
@@ -204,7 +203,6 @@ const SimilarMovieWord = styled.span`
 const SimilarMovieBoxs = styled.div`
   display: flex;
   align-items: flex-start;
-  margin-left: 70px;
   background-color: ${(props) => props.theme.black.veryDark};
 `;
 
@@ -270,14 +268,13 @@ const MovieDetail = () => {
     ["Actors", movieId],
     () => GetMovieCredits(movieId as any)
   );
-  const { data: trailers, isLoading: isLoading3 } = useQuery<ITrailers>(
-    ["Trailers", movieId],
-    () => GetMovieTrailer(movieId as any)
+  const { data: trailers } = useQuery<ITrailers>(["Trailers", movieId], () =>
+    GetMovieTrailer(movieId as any)
   );
-  const { data: similarMovies, isLoading: isLoading4 } =
-    useQuery<IGetMoviesResult>(["SimilarMovies", movieId], () =>
-      GetSimilarMovie(movieId as any)
-    );
+  const { data: similarMovies } = useQuery<IGetMoviesResult>(
+    ["SimilarMovies", movieId],
+    () => GetSimilarMovie(movieId as any)
+  );
 
   return (
     <>
@@ -312,7 +309,7 @@ const MovieDetail = () => {
                   <span style={{ fontSize: "17px" }}>Cast</span>
                   <Scrollbars
                     thumbSize={80}
-                    style={{ width: 900, height: 140 }}
+                    style={{ width: 900, height: 140, marginBottom: "10px" }}
                   >
                     <ActorBoxs>
                       {credits?.cast.slice(0, 20).map((credit) => {
@@ -343,6 +340,7 @@ const MovieDetail = () => {
                       return (
                         <TrailerBox key={value.key}>
                           <iframe
+                            title={value.key}
                             width="300"
                             height="160"
                             src={`https://www.youtube.com/embed/${value.key}`}
@@ -357,38 +355,42 @@ const MovieDetail = () => {
             </InfoContainer>
           </Container>
 
-          <SimilarMovieWord>Similar Movies</SimilarMovieWord>
-          <Scrollbars
-            thumbSize={80}
-            style={{
-              width: "100%",
-              height: "210px",
-              margin: "10px 0 30px 0",
-              backgroundColor: "#141414",
-            }}
-          >
-            <SimilarMovieBoxs>
-              {similarMovies?.results.map((similarMovie) => {
-                return (
-                  <SimilarMovieBox key={similarMovie.id}>
-                    <Link
-                      to={`/detail/movie/${similarMovie.id}`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <SimilarMovieImg
-                        bgphoto={makeImagePath(
-                          similarMovie.poster_path,
-                          "w500"
-                        )}
+          <div style={{ padding: "0 70px" }}>
+            <SimilarMovieWord>Similar Movies</SimilarMovieWord>
+            <Scrollbars
+              thumbSize={80}
+              style={{
+                width: "100%",
+                height: "228px",
+                margin: "10px 0 30px 0",
+                backgroundColor: "#141414",
+              }}
+            >
+              <SimilarMovieBoxs>
+                {similarMovies?.results.map((similarMovie) => {
+                  return (
+                    <SimilarMovieBox key={similarMovie.id}>
+                      <Link
+                        to={`/detail/movie/${similarMovie.id}`}
+                        style={{ textDecoration: "none" }}
                       >
-                        <div>⭐ {similarMovie.vote_average.toFixed(1)}/10</div>
-                      </SimilarMovieImg>
-                    </Link>
-                  </SimilarMovieBox>
-                );
-              })}
-            </SimilarMovieBoxs>
-          </Scrollbars>
+                        <SimilarMovieImg
+                          bgphoto={makeImagePath(
+                            similarMovie.poster_path,
+                            "w500"
+                          )}
+                        >
+                          <div>
+                            ⭐ {similarMovie.vote_average.toFixed(1)}/10
+                          </div>
+                        </SimilarMovieImg>
+                      </Link>
+                    </SimilarMovieBox>
+                  );
+                })}
+              </SimilarMovieBoxs>
+            </Scrollbars>
+          </div>
           <Footer />
         </>
       )}

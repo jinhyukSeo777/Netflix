@@ -9,7 +9,7 @@ import TVDetail from "./Routes/TVFiles/TVDetail";
 function App() {
   return (
     <>
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <Header />
         <Switch>
           <Route path="/search">

@@ -22,7 +22,8 @@ import {
   ExitButton,
   Overlay,
 } from "../styledComponents";
-import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { likeMovieAtom } from "../../Atoms";
 
 const GetBigMovie = () => {
   const history = useHistory();
@@ -31,6 +32,7 @@ const GetBigMovie = () => {
     clickedSession: string;
   }>("/movies/:movieId/:clickedSession");
   const { scrollY } = useViewportScroll();
+  const [atom, setAtom] = useRecoilState(likeMovieAtom);
 
   const { data: NowPlayingMovieData } = useQuery<IGetMoviesResult>(
     ["Movies", "NowPlaying"],
@@ -60,6 +62,9 @@ const GetBigMovie = () => {
     UpcomingMovieData?.results.find(
       (movie) => movie.id === +bigMovieMatch.params.movieId
     );
+  const matchingLiked =
+    bigMovieMatch?.params.movieId &&
+    atom.find((movie) => movie.id === +bigMovieMatch.params.movieId);
 
   let clickedMovie;
   if (
@@ -79,6 +84,12 @@ const GetBigMovie = () => {
     bigMovieMatch.params.clickedSession === "Upcoming"
   ) {
     clickedMovie = matchingUpcoming;
+  }
+  if (
+    matchingLiked !== undefined &&
+    bigMovieMatch.params.clickedSession === "Liked"
+  ) {
+    clickedMovie = matchingLiked;
   }
 
   return (

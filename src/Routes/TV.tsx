@@ -15,6 +15,9 @@ import GetBigTV from "./TVFiles/GetBigTV";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import LikedTV from "./TVFiles/LikedTV";
+import { likeTVAtom } from "../Atoms";
+import { useRecoilState } from "recoil";
 
 const Wrapper = styled.div`
   position: relative;
@@ -140,6 +143,7 @@ const TV = () => {
   );
   const { data: AiringTodayData, isLoading: isLoading3 } =
     useQuery<IGetTVResult>(["TVs", "AiringToday"], getAiringTodayTV);
+  const [atom, setAtom] = useRecoilState(likeTVAtom);
 
   return (
     <Wrapper>
@@ -177,6 +181,7 @@ const TV = () => {
             <TopLatedTV />
             <OnTheAirTV />
             <AiringTodayTV />
+            {atom.length !== 0 ? <LikedTV /> : null}
           </div>
           <GetBigTV />
           <Footer />
