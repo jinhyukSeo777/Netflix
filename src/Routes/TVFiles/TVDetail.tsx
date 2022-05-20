@@ -176,7 +176,7 @@ const TrailerContainer = styled.div`
   justify-content: flex-end;
   align-items: flex-start;
   span {
-    color: ${(props) => props.theme.white.darker};
+    color: ${(props) => props.theme.white.lighter};
     font-size: 17px;
   }
 `;
@@ -313,12 +313,14 @@ const TVDetail = () => {
                       {credits?.cast.slice(0, 20).map((credit) => {
                         return (
                           <ActorBox key={credit.id}>
-                            <ActorImg
-                              bgphoto={makeImagePath(
-                                credit.profile_path,
-                                "w500"
-                              )}
-                            ></ActorImg>
+                            <Link to={`/detail/person/${credit.id}`}>
+                              <ActorImg
+                                bgphoto={makeImagePath(
+                                  credit.profile_path,
+                                  "w500"
+                                )}
+                              ></ActorImg>
+                            </Link>
                             <ActorName>
                               <span>{credit.name}</span>
                               <span>{credit.character}</span>

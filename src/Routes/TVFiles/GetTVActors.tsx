@@ -2,9 +2,6 @@ import { useQuery } from "react-query";
 import styled from "styled-components";
 import { GetTVCredits } from "../api";
 
-const API_KEY = "dcbad9ac7abbeb5a64c3012897391ecb";
-const BASE_PATH = "https://api.themoviedb.org/3";
-
 interface IProps {
   tvId: number;
 }

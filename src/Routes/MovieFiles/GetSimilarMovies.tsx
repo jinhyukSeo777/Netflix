@@ -1,10 +1,8 @@
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { GetSimilarMovie, IGetMoviesResult } from "../api";
 import { makeImagePath } from "../utils";
-
-const API_KEY = "dcbad9ac7abbeb5a64c3012897391ecb";
-const BASE_PATH = "https://api.themoviedb.org/3";
 
 interface IProps {
   movieId: number;
@@ -49,12 +47,15 @@ const GetSimilarMovies = ({ movieId }: IProps) => {
         <>
           {similarMovies?.map((movie, index) => {
             return (
-              <Box
+              <Link
                 key={index}
-                bgphoto={makeImagePath(movie.backdrop_path, "w500")}
+                to={`/detail/movie/${movie.id}`}
+                style={{ textDecoration: "none", color: "#e5e5e5" }}
               >
-                <div>{movie.title}</div>
-              </Box>
+                <Box bgphoto={makeImagePath(movie.backdrop_path, "w500")}>
+                  <div>{movie.title}</div>
+                </Box>
+              </Link>
             );
           })}
         </>

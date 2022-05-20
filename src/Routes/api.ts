@@ -168,3 +168,21 @@ export function GetSimilarTV(tvId: string) {
     (response) => response.json()
   );
 }
+
+export function GetSearchResult(keyword: string) {
+  return fetch(
+    `${BASE_PATH}/search/multi?api_key=${API_KEY}&query=${keyword}`
+  ).then((response) => response.json());
+}
+
+export function GetPerSonDetail(personId: string) {
+  return fetch(`${BASE_PATH}/person/${personId}?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+}
+
+export function GetSearchPerson(personName: string) {
+  return fetch(
+    `${BASE_PATH}/search/person?api_key=${API_KEY}&query=${personName}`
+  ).then((response) => response.json());
+}

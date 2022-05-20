@@ -5,6 +5,7 @@ import Home from "./Routes/Home";
 import Search from "./Routes/Search";
 import TV from "./Routes/TV";
 import TVDetail from "./Routes/TVFiles/TVDetail";
+import PersonDetail from "./Routes/PersonDetail";
 
 function App() {
   return (
@@ -12,8 +13,14 @@ function App() {
       <Router basename={process.env.PUBLIC_URL}>
         <Header />
         <Switch>
-          <Route path="/search">
+          <Route path="/search/:keyword/:mediaType/:movieId">
             <Search />
+          </Route>
+          <Route path="/search/:keyword">
+            <Search />
+          </Route>
+          <Route path="/detail/person/:personId">
+            <PersonDetail />
           </Route>
           <Route path="/detail/movie/:movieId">
             <MovieDetail />
@@ -21,11 +28,14 @@ function App() {
           <Route path="/detail/tv/:tvId">
             <TVDetail />
           </Route>
+          <Route path="/tvs/:tvId/:clickedSession">
+            <TV />
+          </Route>
           <Route path="/tv">
             <TV />
           </Route>
-          <Route path="/tvs/:tvId/:clickedSession">
-            <TV />
+          <Route path="/movies/:movieId/:clickedSession">
+            <Home />
           </Route>
           <Route path="/">
             <Home />

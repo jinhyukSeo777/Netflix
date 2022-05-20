@@ -1,9 +1,6 @@
 import { useQuery } from "react-query";
 import { GetMovieDetail } from "../api";
 
-const API_KEY = "dcbad9ac7abbeb5a64c3012897391ecb";
-const BASE_PATH = "https://api.themoviedb.org/3";
-
 interface IProps {
   movieId: number;
 }

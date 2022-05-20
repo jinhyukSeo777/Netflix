@@ -2,11 +2,9 @@ import { useQuery } from "react-query";
 import styled, { keyframes } from "styled-components";
 import { makeImagePath } from "./utils";
 import {
-  getLatestMovie,
   getNowPlayingMovie,
   getTopLatedMovie,
   getUpcomingMovie,
-  IGetLatestResult,
   IGetMoviesResult,
 } from "./api";
 import TopLatedMovie from "./MovieFiles/TopLatedMovie";
@@ -91,12 +89,12 @@ const Banner = styled.div<{ bgphoto: string }>`
 
 const Title = styled.h2`
   font-size: 68px;
-  margin-bottom: 25px; ;
 `;
 
 const Overview = styled.p`
   font-size: 22px;
   width: 50%;
+  margin: 25px 0;
 `;
 
 const PlayButton = styled.div`
@@ -142,8 +140,6 @@ const Home = () => {
   const { data: UpcomingMovieData, isLoading: isLoading3 } =
     useQuery<IGetMoviesResult>(["Movies", "UpComing"], getUpcomingMovie);
   const [atom, setAtom] = useRecoilState(likeMovieAtom);
-  // const { data: LatestMovieData, isLoading: isLoading4 } =
-  //   useQuery<IGetLatestResult>(["Movies", "Latest"], getLatestMovie);
 
   return (
     <Wrapper>
@@ -161,7 +157,7 @@ const Home = () => {
           >
             <Title>{NowPlayingMovieData?.results[0].title}</Title>
             <Overview>{NowPlayingMovieData?.results[0].overview}</Overview>
-            <div style={{ display: "flex", marginTop: "25px" }}>
+            <div style={{ display: "flex" }}>
               <PlayButton>
                 <FontAwesomeIcon icon={faPlay} />
                 <span>Play</span>

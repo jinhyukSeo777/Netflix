@@ -130,7 +130,8 @@ function Header() {
   const history = useHistory();
   const { register, handleSubmit, setValue } = useForm<IForm>();
   const onValid = (data: IForm) => {
-    history.push(`/search?keyword=${data.keyword}`);
+    setSearchOpen((prev) => !prev);
+    history.push(`/search/${data.keyword}`);
     setValue("keyword", "");
   };
 
@@ -207,7 +208,7 @@ function Header() {
               {...register("keyword", { required: true, minLength: 2 })}
               animate={{ scaleX: searchOpen ? 1 : 0 }}
               transition={{ type: "linear" }}
-              placeholder="Search"
+              placeholder="Title, Person"
             />
           </AnimatePresence>
         </Search>

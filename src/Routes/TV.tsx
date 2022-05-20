@@ -89,12 +89,12 @@ const Banner = styled.div<{ bgphoto: string }>`
 
 const Title = styled.h2`
   font-size: 68px;
-  margin-bottom: 25px; ;
 `;
 
 const Overview = styled.p`
   font-size: 22px;
   width: 50%;
+  margin: 25px 0;
 `;
 
 const PlayButton = styled.div`
@@ -161,7 +161,7 @@ const TV = () => {
           >
             <Title>{TopLatedTVData?.results[0].name}</Title>
             <Overview>{TopLatedTVData?.results[0].overview}</Overview>
-            <div style={{ display: "flex", marginTop: "25px" }}>
+            <div style={{ display: "flex" }}>
               <PlayButton>
                 <FontAwesomeIcon icon={faPlay} />
                 <span>Play</span>

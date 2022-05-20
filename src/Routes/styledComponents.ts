@@ -59,6 +59,10 @@ export const Block = styled.div`
 export const RowTitle = styled.h1`
   font-size: 25px;
   padding-bottom: 20px;
+  span {
+    font-size: 22px;
+    opacity: 0.6;
+  }
 `;
 
 export const Row = styled(motion.div)<{ nofbox: number }>`
@@ -216,7 +220,6 @@ export const ExitButton = styled.div`
 export const BigMovie = styled(motion.div)`
   position: absolute;
   width: 780px;
-  height: 680px;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -257,14 +260,15 @@ export const BigActors = styled.div`
 
 export const BigDivs = styled.div`
   margin: 0 8px;
-  height: 230px;
+  padding: 20px 0 25px 0;
+  height: 180px;
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-end;
   position: relative;
   span {
     position: absolute;
-    top: 15px;
+    top: 35px;
     left: 15px;
     font-size: 20px;
   }

@@ -1,10 +1,8 @@
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { IGetTVResult } from "../api";
+import { GetSimilarTV, IGetTVResult } from "../api";
 import { makeImagePath } from "../utils";
-
-const API_KEY = "dcbad9ac7abbeb5a64c3012897391ecb";
-const BASE_PATH = "https://api.themoviedb.org/3";
 
 interface IProps {
   tvId: number;
@@ -38,9 +36,7 @@ const Box = styled.div<{ bgphoto: string }>`
 
 const GetSimilarTVs = ({ tvId }: IProps) => {
   const { data, isLoading } = useQuery<IGetTVResult>(["SimilarTVs", tvId], () =>
-    fetch(`${BASE_PATH}/tv/${tvId}/similar?api_key=${API_KEY}`).then(
-      (response) => response.json()
-    )
+    GetSimilarTV(tvId as any)
   );
   const similarTVs = data?.results.slice(0, 3);
 
@@ -50,12 +46,15 @@ const GetSimilarTVs = ({ tvId }: IProps) => {
         <>
           {similarTVs?.map((tv, index) => {
             return (
-              <Box
+              <Link
                 key={index}
-                bgphoto={makeImagePath(tv.backdrop_path, "w500")}
+                to={`/detail/tv/${tv.id}`}
+                style={{ textDecoration: "none", color: "#e5e5e5" }}
               >
-                <div>{tv.name}</div>
-              </Box>
+                <Box bgphoto={makeImagePath(tv.backdrop_path, "w500")}>
+                  <div>{tv.name}</div>
+                </Box>
+              </Link>
             );
           })}
         </>
