@@ -244,6 +244,7 @@ const PersonDetail = () => {
                       {data?.also_known_as.map((v, index) => (
                         <span key={index} style={{ marginRight: "15px" }}>
                           {v}
+                          {index !== data.also_known_as.length - 1 ? "," : null}
                         </span>
                       ))}
                     </div>

@@ -122,8 +122,10 @@ interface IForm {
 function Header() {
   const tv1 = useRouteMatch("/tv");
   const tv2 = useRouteMatch("/tvs/:tvId/:clickedSession");
-  const detail = useRouteMatch("/detail");
+  const detailMatch = useRouteMatch("/detail");
+  const searchMatch = useRouteMatch("/search");
   const tvMatch = tv1 || tv2;
+  const homeMatch = !tvMatch && !detailMatch && !searchMatch;
   const [searchOpen, setSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useViewportScroll();
@@ -177,7 +179,7 @@ function Header() {
         <Items>
           <Item>
             <Link onClick={upPage} to="/">
-              Home {!tvMatch && !detail && <Circle layoutId="circle" />}
+              Home {homeMatch && <Circle layoutId="circle" />}
             </Link>
           </Item>
           <Item>

@@ -11,7 +11,7 @@ export const NextPage = styled.div`
   position: absolute;
   top: 45px;
   right: -55px;
-  width: 50px;
+  width: 55px;
   height: 120px;
   font-size: 25px;
   display: flex;
@@ -20,13 +20,16 @@ export const NextPage = styled.div`
   cursor: pointer;
   z-index: 2;
   opacity: 0;
+  &:hover {
+    font-size: 32px;
+  }
 `;
 
 export const PrevPage = styled.div`
   position: absolute;
   top: 45px;
   left: -55px;
-  width: 50px;
+  width: 55px;
   height: 120px;
   font-size: 25px;
   display: flex;
@@ -35,6 +38,9 @@ export const PrevPage = styled.div`
   cursor: pointer;
   z-index: 2;
   opacity: 0;
+  &:hover {
+    font-size: 32px;
+  }
 `;
 
 export const Slider = styled.div`
