@@ -8,8 +8,8 @@ import {
   IGetMoviesResult,
 } from "./api";
 import TopLatedMovie from "./MovieFiles/TopLatedMovie";
-import UpComingMovie from "./MovieFiles/UpcomingMovie";
 import NowPlayingMovie from "./MovieFiles/NowPlayingMovie";
+import UpComingMovie from "./MovieFiles/UpcomingMovie";
 import Footer from "../components/Footer";
 import GetBigMovie from "./MovieFiles/GetBigMovie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
