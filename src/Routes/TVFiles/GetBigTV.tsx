@@ -118,7 +118,7 @@ const GetBigTV = () => {
                       <FontAwesomeIcon icon={faX} />
                     </ExitButton>
                   </BigCover>
-                  <BigTitle>{clickedMovie.title}</BigTitle>
+                  <BigTitle>{clickedMovie.name}</BigTitle>
                   <div style={{ display: "flex" }}>
                     <BigOverview>{clickedMovie.overview}</BigOverview>
                     <BigActors>

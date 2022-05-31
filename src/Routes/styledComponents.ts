@@ -225,7 +225,7 @@ export const ExitButton = styled.div`
 
 export const BigMovie = styled(motion.div)`
   position: absolute;
-  width: 780px;
+  width: 800px;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -253,7 +253,7 @@ export const BigTitle = styled.h3`
 `;
 
 export const BigOverview = styled.p`
-  padding: 20px;
+  padding: 20px 30px 20px 20px;
   width: 55%;
   line-height: 18px;
   color: ${(props) => props.theme.white.lighter};
@@ -266,7 +266,7 @@ export const BigActors = styled.div`
 
 export const BigDivs = styled.div`
   margin: 0 8px;
-  padding: 20px 0 25px 0;
+  padding: 20px 0 20px 0;
   height: 180px;
   display: flex;
   justify-content: space-around;
