@@ -21,7 +21,7 @@ const Box = styled.div<{ bgphoto: string }>`
   div {
     opacity: 0;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     font-size: 17px;
     display: flex;
     justify-content: center;
